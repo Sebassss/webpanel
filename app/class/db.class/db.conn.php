@@ -2,7 +2,7 @@
 /**
  * Clase de conexiòn
  *
- * Clase para gestionar la conexion a la base de datos
+ * Clase para gestionar la conn a la base de datos
  *
  * @category   Configuracion
  * @package    base de datos
@@ -13,40 +13,40 @@
 require  "db.inc.php";
 class MySQL {
 
-   private $conexion;
-   private $consulta;
+   private $conn;
+   private $query;
 
 
     /**
-    * Contructor que inicia la conexion
+    * Contructor que inicia la conn
     */
     public function __construct (){
-       $this->conexion = mysqli_connect (DATABASE_HOST,DATABASE_USER,DATABASE_PASS);
-       mysqli_set_charset($this->conexion,"utf8");
-       mysqli_select_db($this->conexion,DATABASE_NAME);
+       $this->conn = mysqli_connect (DATABASE_HOST,DATABASE_USER,DATABASE_PASS);
+       mysqli_set_charset($this->conn,"utf8");
+       mysqli_select_db($this->conn,DATABASE_NAME);
    }
 
     /**
-    * funcion que ejecuta una consulta sql
+    * funcion que ejecuta una query sql
     * @param $Sql
     */
-    public function Consulta($sql){
-       $this->consulta =  mysqli_query($this->conexion,$sql);
-        return mysqli_error($this->conexion);
+    public function query($sql){
+       $this->query =  mysqli_query($this->conn,$sql);
+        return mysqli_error($this->conn);
     }
 
     /**
-    * funcion que retorna el resultado de una consulta en objetos
+    * funcion que retorna el resultado de una query en objetos
     */
-    public function obtenerObjeto(){
-        $i = mysqli_num_rows($this->consulta); //Verifico si la query ha devuelto resultados
+    public function getObject(){
+        $i = mysqli_num_rows($this->query); //Verifico si la query ha devuelto resultados
         if($i>0) {
-            return mysqli_fetch_object($this->consulta);
+            return mysqli_fetch_object($this->query);
         }
         else{
             /*Creo un objeto vacio para devolver*/
             $obj = new stdClass();
-            $obj->consultar=0;
+            $obj->queryr=0;
             $obj->agregar=0;
             $obj->editar=0;
             $obj->eliminar=0;
@@ -55,18 +55,18 @@ class MySQL {
     }
 
     /**
-    * Funcion que finaliza la conexion a la base de datos
+    * Funcion que finaliza la conn a la base de datos
     */
-    public function desconectar () {
-        mysqli_close($this->conexion);
+    public function close () {
+        mysqli_close($this->conn);
     }
 
-    public function num_rows($consulta){
-        return mysqli_num_rows($this->consulta);
+    public function num_rows($query){
+        return mysqli_num_rows($this->query);
     }
 
-     public function fetch_array($consulta){
+     public function fetch_array($query){
 
-         return mysqli_fetch_array($this->consulta);
+         return mysqli_fetch_array($this->query);
      }
  }
