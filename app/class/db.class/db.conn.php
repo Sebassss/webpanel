@@ -30,32 +30,30 @@ class MySQL {
     /*funcion para transacciones*/
     public function transaction($sql_array)
     {
-
             /* switch autocommit status to FALSE. Actually, it starts transaction */
-            mysqli_autocommit($this->conn,FALSE);
-            $flag= array();
+        $this->transaction = mysqli_autocommit($this->conn,FALSE);
 
-            for($i=0;$i<count($sql_array);$i++) {
+            for($i=0;$i<count($sql_array);$i++)
+            {
                 $res = $this->query($sql_array[$i]);
-
                 if ($res != "")
                 {
-                    $flag[$i]++;
-                    mysqli_rollback($this->conn);
+                    $this->transaction = mysqli_rollback($this->conn);
+                    return $sql_array[$i];
                 }
             }
-
-
 
             mysqli_commit($this->conn);
 
         /* switch back autocommit status */
-        mysqli_autocommit($this->conn,TRUE);
+        $this->transaction = mysqli_autocommit($this->conn,TRUE);
     }
-    /**
+
+    /*
     * funcion que ejecuta una query sql
     * @param $Sql
     */
+
     public function query($sql){
        $this->query =  mysqli_query($this->conn,$sql);
         return mysqli_error($this->conn);
